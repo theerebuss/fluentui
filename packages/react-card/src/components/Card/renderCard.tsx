@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { getSlots } from '@fluentui/react-utilities';
+import { getSlotsCompat } from '@fluentui/react-utilities';
+import { Menu, MenuItem, MenuList, MenuPopover } from '@fluentui/react-menu';
 import { CardState } from './Card.types';
 import { cardShorthandProps } from './useCard';
 
@@ -7,12 +8,25 @@ import { cardShorthandProps } from './useCard';
  * Render the final JSX of Card
  */
 export const renderCard = (state: CardState) => {
-  const { slots, slotProps } = getSlots(state, cardShorthandProps);
+  const { slots, slotProps } = getSlotsCompat(state, cardShorthandProps);
 
   return (
-    <slots.root {...slotProps.root}>
-      {/* TODO Add additional slots in the appropriate place */}
-      {state.children}
-    </slots.root>
+    <>
+      <slots.root role="group" {...slotProps.root}>
+        {state.children}
+      </slots.root>
+      {state.context && (
+        <Menu>
+          <MenuPopover {...state.context}>
+            <MenuList>
+              <MenuItem>New </MenuItem>
+              <MenuItem>New Window</MenuItem>
+              <MenuItem disabled>Open File</MenuItem>
+              <MenuItem>Open Folder</MenuItem>
+            </MenuList>
+          </MenuPopover>
+        </Menu>
+      )}
+    </>
   );
 };
